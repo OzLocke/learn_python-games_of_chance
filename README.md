@@ -1,43 +1,69 @@
-# Define the variables
+-   [Define the variables](#define-the-variables)
+-   [Define utility functions](#define-utility-functions)
+-   [Define the games](#define-the-games)
+    -   [Coin Toss](#coin-toss)
+    -   [Cho Han](#cho-han)
+-   [Play the games!](#play-the-games)
+    -   [The Coin Toss game](#the-coin-toss-game)
+    -   [The Cho-Han game](#the-cho-han-game)
 
-Here we establish the global variables for the project, and load any packages needed
+Define the variables
+====================
 
-```{python init_vars}
+Here we establish the global variables for the project, and load any
+packages needed
+
+``` python
 #--INITIALISE--#
 import random
 denomination = "chips"
 wallet = 100
 ```
 
-# Define utility functions
+Define utility functions
+========================
 
 Here we establish functions that will be used only by other functions.
 
-The print_result function outputs the result of any game function, adding information about the player's remaining balance. Although it's only a single line of code, I chose to make it a utility function so I can change the layout of the output display in one place.
+The print\_result function outputs the result of any game function,
+adding information about the player’s remaining balance. Although it’s
+only a single line of code, I chose to make it a utility function so I
+can change the layout of the output display in one place.
 
-```{python def_gen_func}
+``` python
 #--DEFINE UTILITY FUNCTIONS--#
 def print_result(result):
     # Output result
     print(result + "\n\nYou have " + str(wallet) + " " + denomination + " left.")
 ```
 
-# Define the games
+Define the games
+================
 
-## Coin Toss
+Coin Toss
+---------
 
-The Coin Toss game takes a pot (the amount the player bets) as an integer and a call as either heads or tails. 
+The Coin Toss game takes a pot (the amount the player bets) as an
+integer and a call as either heads or tails.
 
-1. The two possible call values are asigned to a list called **outcomes** so that we can (using *list*.index) view the call as either a string or an integer
-2. Assign a random int between 0 and 1 for the result of the **toss** (heads and tails respectively)
-3. Find the string version of the **toss** result by using the **toss** result as the index for returning a value from the **outcomes** list
-4. Convert the original **call** value to an integer by looking up the string value in the **outcomes** list and returning it's posision (with *list*.index)
-5. Process the result of the game...
-    1. Populate the **result** value based on the comparing **toss** to **call**
-    2. Adjust the **wallet** *global* variable by the pot accordingly
-6. Pass the **result** of the game to the **print_result** function to display it
+1.  The two possible call values are asigned to a list called
+    **outcomes** so that we can (using *list*.index) view the call as
+    either a string or an integer
+2.  Assign a random int between 0 and 1 for the result of the **toss**
+    (heads and tails respectively)
+3.  Find the string version of the **toss** result by using the **toss**
+    result as the index for returning a value from the **outcomes** list
+4.  Convert the original **call** value to an integer by looking up the
+    string value in the **outcomes** list and returning it’s posision
+    (with *list*.index)
+5.  Process the result of the game…
+    1.  Populate the **result** value based on the comparing **toss** to
+        **call**
+    2.  Adjust the **wallet** *global* variable by the pot accordingly
+6.  Pass the **result** of the game to the **print\_result** function to
+    display it
 
-```{python def_coin_toss}
+``` python
 #--DEFINE GAME FUNCTIONS--#
 # Coin Toss
 def coin_toss(pot, call):
@@ -58,11 +84,12 @@ def coin_toss(pot, call):
 
     # Output result
     print_result(result)
-```    
+```
 
-## Cho Han
+Cho Han
+-------
 
-```{python def_cho-han}
+``` python
 # Cho-Han
 def cho_han(pot, call):
     # Define variables
@@ -85,19 +112,38 @@ def cho_han(pot, call):
     print_result(result)
 ```
 
-# Play the games!
+Play the games!
+===============
 
-## The Coin Toss game
+The Coin Toss game
+------------------
 
-```{python call_coin_toss}
+``` python
 #--CALL GAMES--#
 # Coin Toss
 coin_toss(20, "heads")
 ```
 
-## The Cho-Han game
+    ## tails
+    ## 
+    ## You guessed incorrectly.
+    ## 
+    ## You lost 20 chips.
+    ## 
+    ## You have 80 chips left.
 
-```{python call_cho-han}
+The Cho-Han game
+----------------
+
+``` python
 # Cho-Han
 cho_han(20, "odd")
 ```
+
+    ## 8... even
+    ## 
+    ## You guessed incorrectly.
+    ## 
+    ## You lost 20 chips.
+    ## 
+    ## You have 60 chips left.
