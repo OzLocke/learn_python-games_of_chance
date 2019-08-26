@@ -89,6 +89,26 @@ def coin_toss(pot, call):
 Cho Han
 -------
 
+The Cho Han game takes a pot (the amount the player bets) as an integer
+and a call as either even or odd.
+
+1.  The two possible call values are asigned to a list called
+    **outcomes** so that we can (using *list*.index) view the call as
+    either a string or an integer
+2.  Assign a random int between 0 and 1 for the result of the **roll**
+    (even and odd respectively)
+3.  Find the string version of the **roll** result by using the **roll**
+    result as the index for returning a value from the **outcomes** list
+4.  Convert the original **call** value to an integer by looking up the
+    string value in the **outcomes** list and returning it’s posision
+    (with *list*.index)
+5.  Process the result of the game…
+    1.  Populate the **result** value based on the comparing **roll** to
+        **call**
+    2.  Adjust the **wallet** *global* variable by the pot accordingly
+6.  Pass the **result** of the game to the **print\_result** function to
+    display it
+
 ``` python
 # Cho-Han
 def cho_han(pot, call):
@@ -118,32 +138,36 @@ Play the games!
 The Coin Toss game
 ------------------
 
+Call the game!
+
 ``` python
 #--CALL GAMES--#
 # Coin Toss
 coin_toss(20, "heads")
 ```
 
-    ## tails
+    ## heads
     ## 
-    ## You guessed incorrectly.
+    ## You guessed correctly!
     ## 
-    ## You lost 20 chips.
+    ## You won 20 chips!
     ## 
-    ## You have 80 chips left.
+    ## You have 120 chips left.
 
 The Cho-Han game
 ----------------
+
+Call the game!
 
 ``` python
 # Cho-Han
 cho_han(20, "odd")
 ```
 
-    ## 8... even
+    ## 7... odd
     ## 
-    ## You guessed incorrectly.
+    ## You guessed correctly!
     ## 
-    ## You lost 20 chips.
+    ## You won 20 chips!
     ## 
-    ## You have 60 chips left.
+    ## You have 140 chips left.
