@@ -38,14 +38,14 @@ def print_result(result):
 
 ## Coin Toss
 
-The Coin Toss game takes a pot (the amount the player bets) as an integer and a call as either heads or tails. 
+The Coin Toss game takes a pot (the amount the player bets) as an integer and a call as either heads or tails. The game then calculates the result of the coin toss. If the player correctly guessed the result, they win, adding the value of the pot to their wallet. Otherwise they lose, subtracting the value of the pot from their wallet.
 
 1. The two possible call values are asigned to a list called **outcomes** so that we can (using *list*.index) view the call as either a string or an integer
 2. Assign a random int between 0 and 1 for the result of the **toss** (heads and tails respectively)
 3. Find the string version of the **toss** result by using the **toss** result as the index for returning a value from the **outcomes** list
 4. Convert the original **call** value to an integer by looking up the string value in the **outcomes** list and returning it's posision (with *list*.index)
 5. Process the result of the game...
-    1. Populate the **result** value based on the comparing **toss** to **call**
+    1. Populate the **result** value based on comparing **toss** to **call**
     2. Adjust the **wallet** *global* variable by the pot accordingly
 6. Pass the **result** of the game to the **print_result** function to display it
 
@@ -74,14 +74,14 @@ def coin_toss(pot, call):
 
 ## Cho Han
 
-The Cho Han game takes a pot (the amount the player bets) as an integer and a call as either even or odd.
+The Cho Han game takes a pot (the amount the player bets) as an integer and a call as either even or odd. The game then picks two random numbers and adds them together, to get a number if that is either odd or even. If the player correctly guesses whether the number would be odd or even, they win, adding the value of the pot to their wallet. Otherwise they lose, subtracting the value of the pot from their wallet.
 
 1. The two possible call values are asigned to a list called **outcomes** so that we can (using *list*.index) view the call as either a string or an integer
 2. Assign a random int between 0 and 1 for the result of the **roll** (even and odd respectively)
 3. Find the string version of the **roll** result by using the **roll** result as the index for returning a value from the **outcomes** list
 4. Convert the original **call** value to an integer by looking up the string value in the **outcomes** list and returning it's posision (with *list*.index)
 5. Process the result of the game...
-    1. Populate the **result** value based on the comparing **roll** to **call**
+    1. Populate the **result** value based on comparing **roll** to **call**
     2. Adjust the **wallet** *global* variable by the pot accordingly
 6. Pass the **result** of the game to the **print_result** function to display it
 
@@ -108,6 +108,40 @@ def cho_han(pot, call):
     print_result(result)
 ```
 
+## Card Draw
+
+The Card Draw game takes only the pot (the amount the player bets.) The game calculates two numbers, one for the player and another for the game. If the player's number is higher they win, adding the value of the pot to their wallet. If it is the same as the game's number they draw and neither win or lose any money. If the player's number is lower than the game's number the player loses, subtracting the value of the pot from their wallet.
+
+1. Assign random numbers to the **player_card** and **game_card** variables
+2. Prepare the first part of the **result text**, as this will be the same regardless
+5. Process the result of the game...
+    1. Populate the **result** value based on comparing **player_card** to **game_card**
+    2. Adjust the **wallet** *global* variable by the pot accordingly
+6. Pass the **result** of the game to the **print_result** function to display it
+
+```{python}
+# Card Draw
+def card_draw(pot):
+  # Define variables
+  global wallet
+  player_card = random.randint(1,10)
+  game_card = random.randint(1,10)
+  result = "You drew " + str(player_card) + " and I drew " + str(game_card) + ".\n\n"
+  
+  #Find result
+  if player_card > game_card:
+    result += "You win!\n\nYou won " + str(pot) + denomination + "."
+    wallet += pot
+  elif player_card < game_card:
+    result += "I won!\n\nYou lost " + str(pot) + denomination + "."
+    wallet -= pot
+  else:
+    result += "We drew.\n\nYou didn't win or lose."
+    
+  # Output result
+  print_result(result)
+```
+
 # Play the games!
 
 ## The Coin Toss game
@@ -127,4 +161,13 @@ Call the game!
 ```{python call_cho-han}
 # Cho-Han
 cho_han(20, "odd")
+```
+
+## The Card Draw game
+
+Call the game!
+
+```{python card_draw}
+# Card Draw
+card_draw(20)
 ```
