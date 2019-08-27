@@ -120,10 +120,10 @@ The Card Draw game takes only the pot (the amount the player bets.) The game cal
 
 1. Assign random numbers to the **player_card** and **game_card** variables
 2. Prepare the first part of the **result text**, as this will be the same regardless
-5. Process the result of the game...
+3. Process the result of the game...
     1. Populate the **result** value based on comparing **player_card** to **game_card**
     2. Adjust the **wallet** *global* variable by the pot accordingly
-6. Pass the **result** of the game to the **print_result** function to display it
+4. Pass the **result** of the game to the **print_result** function to display it
 
 ```{python def_card_draw}
 # Card Draw
@@ -148,6 +148,20 @@ def card_draw(pot):
   print_result(result)
 ```
 
+### Simple Roulette
+
+The Simple Roulette game takes the pot (the amount the player bets,) the call type (which can either be "parity" or "number",) and the call (which is eother "odd"/"even", "00", or a number as a string.) The game calculates the result of a **spin**, returning the number as a string (because 00 and 0 are the same number when defined as ints.) The game then also checks the parity of the **spin**. 
+
+If the player chose "parity", and their **call** was the same as the parity of the **spin**, or if they chose "number" and the number of their call was the same as the **spin**, they win, adding the value of the **pot** to their **wallet.** If the player's guess was incorrect the player loses, subtracting the value of the **pot** from their **wallet.**
+
+1. Define a *list* containing all possible **outcomes** of a spin as strings  (because 00 and 0 are the same number when defined as ints)
+2. Find the result of the spin by returning a random value from the **outcomes** *list*
+3. Find the *spin_parity* of the spin
+4. Process the result of the game...
+    1. Populate the **result** value based on comparing **call** to **spin** or **spin_parity**
+    2. Adjust the **wallet** *global* variable by the pot accordingly
+5. Pass the **result** of the game to the **print_result** function to display it
+
 ```{python def_simple_roulette}
 # Simple Roulette
 def simple_roulette(pot, call_type, call):
@@ -155,34 +169,19 @@ def simple_roulette(pot, call_type, call):
   global wallet
   outcomes = ["0", "00", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28"]
   spin = outcomes[random.randint(0, len(outcomes) - 1)]
-  if spin == "0" or spin == "00" or str(spin) != 0:
+  if int(spin) == 0 or int(spin) % 2 != 0:
     spin_parity = "odd"
   else:
     spin_parity = "even"
   
   # Find result
-  if call_type == "parity":
-    if call == spin_parity:
-      result = spin + ", " + spin_parity + ".\n\nYou guessed correctly!\n\nYou won " + str(pot) + denomination + "."
-      wallet += pot
-    else:
-      result = spin + ", " + spin_parity + ".\n\nYou guessed incorrectly.\n\nYou lost " + str(pot) + denomination + "."
-      wallet -= pot
+  if (call_type == "parity" and call == spin_parity) or \
+     (call_type == "number" and call == spin):
+    result = spin + ", " + spin_parity + ".\n\nYou guessed correctly!\n\nYou won " + str(pot) + denomination + "."
+    wallet += pot
   else:
-    if call == "00" or call == "0":
-      if call == spin:
-        result = spin + ".\n\nYou guessed correctly!\n\nYou won " + str(pot) + denomination + "."
-        wallet += pot
-      else:
-        result = spin + ".\n\nYou guessed incorrectly.\n\nYou lost " + str(pot) + denomination + "."
-        wallet -= pot
-    else:
-      if call == str(spin):
-        result = spin + ".\n\nYou guessed correctly!\n\nYou won " + str(pot) + denomination + "."
-        wallet += pot
-      else:
-        result = str(spin) + ".\n\nYou guessed incorrectly.\n\nYou lost " + str(pot) + denomination + "."
-        wallet -= pot
+    result = spin + ", " + spin_parity + ".\n\nYou guessed incorrectly.\n\nYou lost " + str(pot) + denomination + "."
+    wallet -= pot
 
   # Output result
   print_result(result)
@@ -235,5 +234,3 @@ simple_roulette(20, "parity", "odd")
 # Simple Roulette
 simple_roulette(20, "number", "00")
 ```
-
-
