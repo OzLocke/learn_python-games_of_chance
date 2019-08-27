@@ -1,16 +1,31 @@
--   [Define the variables](#define-the-variables)
--   [Define utility functions](#define-utility-functions)
--   [Define the games](#define-the-games)
-    -   [Coin Toss](#coin-toss)
-    -   [Cho Han](#cho-han)
-    -   [Card Draw](#card-draw)
--   [Play the games!](#play-the-games)
-    -   [The Coin Toss game](#the-coin-toss-game)
-    -   [The Cho-Han game](#the-cho-han-game)
-    -   [The Card Draw game](#the-card-draw-game)
+-   [Games of Chance](#games-of-chance)
+    -   [About](#about)
+    -   [Define the variables](#define-the-variables)
+    -   [Define utility functions](#define-utility-functions)
+    -   [Define the games](#define-the-games)
+        -   [Coin Toss](#coin-toss)
+        -   [Cho Han](#cho-han)
+        -   [Card Draw](#card-draw)
+        -   [Simple Roulette](#simple-roulette)
+    -   [Play the games!](#play-the-games)
+        -   [The Coin Toss game](#the-coin-toss-game)
+        -   [The Cho-Han game](#the-cho-han-game)
+        -   [The Card Draw game](#the-card-draw-game)
+        -   [Th Simple Roulette Game](#th-simple-roulette-game)
+
+Games of Chance
+===============
+
+About
+-----
+
+A series of simples games of chance, executed by calling the respective
+functions directly. Note that I have not included any error checking as
+for this purpose of this exercise I am assuming the function calls would
+actually be executed by an interface with constrained inputs.
 
 Define the variables
-====================
+--------------------
 
 Here we establish the global variables for the project, and load any
 packages needed
@@ -23,7 +38,7 @@ wallet = 100
 ```
 
 Define utility functions
-========================
+------------------------
 
 Here we establish functions that will be used only by other functions.
 
@@ -40,10 +55,9 @@ def print_result(result):
 ```
 
 Define the games
-================
+----------------
 
-Coin Toss
----------
+### Coin Toss
 
 The Coin Toss game takes a pot (the amount the player bets) as an
 integer and a call as either heads or tails. The game then calculates
@@ -91,8 +105,7 @@ def coin_toss(pot, call):
     print_result(result)
 ```
 
-Cho Han
--------
+### Cho Han
 
 The Cho Han game takes a pot (the amount the player bets) as an integer
 and a call as either even or odd. The game then picks two random numbers
@@ -141,8 +154,7 @@ def cho_han(pot, call):
     print_result(result)
 ```
 
-Card Draw
----------
+### Card Draw
 
 The Card Draw game takes only the pot (the amount the player bets.) The
 game calculates two numbers, one for the player and another for the
@@ -172,12 +184,12 @@ def card_draw(pot):
   game_card = random.randint(1,10)
   result = "You drew " + str(player_card) + " and I drew " + str(game_card) + ".\n\n"
   
-  #Find result
+  # Find result
   if player_card > game_card:
-    result += "You win!\n\nYou won " + str(pot) + denomination + "."
+    result += "You win!\n\nYou won " + str(pot) + " " + denomination + "."
     wallet += pot
   elif player_card < game_card:
-    result += "I won!\n\nYou lost " + str(pot) + denomination + "."
+    result += "I won!\n\nYou lost " + str(pot) + " " + denomination + "."
     wallet -= pot
   else:
     result += "We drew.\n\nYou didn't win or lose."
@@ -186,11 +198,67 @@ def card_draw(pot):
   print_result(result)
 ```
 
-Play the games!
-===============
+### Simple Roulette
 
-The Coin Toss game
-------------------
+The Simple Roulette game takes the pot (the amount the player bets,) the
+call type (which can either be “parity” or “number”,) and the call
+(which is eother “odd”/“even”, “00”, or a number as a string.) The game
+calculates the result of a **spin**, returning the number as a string
+(because 00 and 0 are the same number when defined as ints.) The game
+then also checks the parity of the **spin**.
+
+If the player chose “parity”, and their **call** was the same as the
+parity of the **spin**, or if they chose “number” and the number of
+their call was the same as the **spin**, they win, adding the value of
+the **pot** to their **wallet.** If the player’s guess was incorrect the
+player loses, subtracting the value of the **pot** from their
+**wallet.**
+
+1.  In roulette a bet against a number returns the pot multiplied by 35,
+    against parity it returns the bet multiplied by 1. Update the
+    **pot** accordingly
+2.  Define a *list* containing all possible **outcomes** of a spin as
+    strings (because 00 and 0 are the same number when defined as ints)
+3.  Find the result of the spin by returning a random value from the
+    **outcomes** *list*
+4.  Find the *spin\_parity* of the spin
+5.  Process the result of the game…
+    1.  Populate the **result** value based on comparing **call** to
+        **spin** or **spin\_parity**
+    2.  Adjust the **wallet** *global* variable by the pot accordingly
+6.  Pass the **result** of the game to the **print\_result** function to
+    display it
+
+``` python
+# Simple Roulette
+def simple_roulette(pot, call_type, call):
+  # Define variables
+  global wallet
+  if call_type == "number": pot *= 35
+  outcomes = ["0", "00", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28"]
+  spin = outcomes[random.randint(0, len(outcomes) - 1)]
+  if int(spin) == 0 or int(spin) % 2 != 0:
+    spin_parity = "odd"
+  else:
+    spin_parity = "even"
+  
+  # Find result
+  if (call_type == "parity" and call == spin_parity) or \
+     (call_type == "number" and call == spin):
+    result = spin + ", " + spin_parity + ".\n\nYou guessed correctly!\n\nYou won " + str(pot) + " " + denomination + "."
+    wallet += pot
+  else:
+    result = spin + ", " + spin_parity + ".\n\nYou guessed incorrectly.\n\nYou lost " + str(pot) + " " + denomination + "."
+    wallet -= pot
+
+  # Output result
+  print_result(result)
+```
+
+Play the games!
+---------------
+
+### The Coin Toss game
 
 Call the game!
 
@@ -200,16 +268,15 @@ Call the game!
 coin_toss(20, "heads")
 ```
 
-    ## tails
+    ## heads
     ## 
-    ## You guessed incorrectly.
+    ## You guessed correctly!
     ## 
-    ## You lost 20 chips.
+    ## You won 20 chips!
     ## 
-    ## You have 80 chips left.
+    ## You have 120 chips left.
 
-The Cho-Han game
-----------------
+### The Cho-Han game
 
 Call the game!
 
@@ -218,16 +285,15 @@ Call the game!
 cho_han(20, "odd")
 ```
 
-    ## 4... even
+    ## 5... odd
     ## 
-    ## You guessed incorrectly.
+    ## You guessed correctly!
     ## 
-    ## You lost 20 chips.
+    ## You won 20 chips!
     ## 
-    ## You have 60 chips left.
+    ## You have 140 chips left.
 
-The Card Draw game
-------------------
+### The Card Draw game
 
 Call the game!
 
@@ -236,10 +302,44 @@ Call the game!
 card_draw(20)
 ```
 
-    ## You drew 5 and I drew 3.
+    ## You drew 7 and I drew 6.
     ## 
     ## You win!
     ## 
-    ## You won 20chips.
+    ## You won 20 chips.
     ## 
-    ## You have 80 chips left.
+    ## You have 160 chips left.
+
+### Th Simple Roulette Game
+
+Call the game!
+
+#### With a parity call type
+
+``` python
+# Simple Roulette
+simple_roulette(20, "parity", "odd")
+```
+
+    ## 00, odd.
+    ## 
+    ## You guessed correctly!
+    ## 
+    ## You won 20 chips.
+    ## 
+    ## You have 180 chips left.
+
+#### With a number call type
+
+``` python
+# Simple Roulette
+simple_roulette(20, "number", "00")
+```
+
+    ## 2, even.
+    ## 
+    ## You guessed incorrectly.
+    ## 
+    ## You lost 700 chips.
+    ## 
+    ## You have -520 chips left.
