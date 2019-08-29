@@ -19,7 +19,7 @@ Games of Chance
 About
 -----
 
-A series of simples games of chance, executed by calling the respective
+A series of simple games of chance, executed by calling the respective
 functions directly. Note that I have not included any error checking as
 for this purpose of this exercise I am assuming the function calls would
 actually be executed by an interface with constrained inputs.
@@ -33,7 +33,7 @@ packages needed
 ``` python
 #--INITIALISE--#
 import random
-denomination = "chips"
+denomination = 'chips'
 wallet = 100
 ```
 
@@ -51,7 +51,7 @@ can change the layout of the output display in one place.
 #--DEFINE UTILITY FUNCTIONS--#
 def print_result(result):
     # Output result
-    print(result + "\n\nYou have " + str(wallet) + " " + denomination + " left.")
+    print(result + '\n\nYou have ' + str(wallet) + ' ' + denomination + ' left.')
 ```
 
 Define the games
@@ -65,22 +65,26 @@ the result of the coin toss. If the player correctly guessed the result,
 they win, adding the value of the pot to their wallet. Otherwise they
 lose, subtracting the value of the pot from their wallet.
 
-1.  The two possible call values are asigned to a list called
+1.  The two possible call values are assigned to a list called
     **outcomes** so that we can (using *list*.index) view the call as
     either a string or an integer
 2.  Assign a random int between 0 and 1 for the result of the **toss**
     (heads and tails respectively)
 3.  Find the string version of the **toss** result by using the **toss**
     result as the index for returning a value from the **outcomes** list
-4.  Convert the original **call** value to an integer by looking up the
-    string value in the **outcomes** list and returning it’s posision
-    (with *list*.index)
-5.  Process the result of the game…
-    1.  Populate the **result** value based on comparing **toss** to
-        **call**
-    2.  Adjust the **wallet** *global* variable by the pot accordingly
-6.  Pass the **result** of the game to the **print\_result** function to
-    display it
+4.  Enter a *try except* to avoid invalid input errors
+    1.  Convert the original **call** value to an integer by looking up
+        the string value in the **outcomes** list and returning it’s
+        position (with *list*.index), lower-casing the input to allow
+        any casing version (heads, Heads, HEADS)
+    2.  Process the result of the game…
+        1.  Populate the **result** value based on comparing **toss** to
+            **call**
+        2.  Adjust the **wallet** *global* variable by the pot
+            accordingly
+    3.  Pass the **result** of the game to the **print\_result**
+        function to display it
+5.  Print relevant error on *except*
 
 ``` python
 #--DEFINE GAME FUNCTIONS--#
@@ -88,21 +92,35 @@ lose, subtracting the value of the pot from their wallet.
 def coin_toss(pot, call):
     # Define variables
     global wallet
-    outcomes = ["heads", "tails"]
+    outcomes = ['heads', 'tails']
     toss = random.randint(0,1)
     toss_string = outcomes[toss]
-    call = outcomes.index(call)
     
     # Find result
-    if call == toss:
-        result = toss_string + "\n\nYou guessed correctly!\n\nYou won " + str(pot) + " " + denomination + "!"
-        wallet += pot
-    else:
-        result = toss_string + "\n\nYou guessed incorrectly.\n\nYou lost " + str(pot) + " " + denomination + "."
-        wallet -= pot
-
-    # Output result
-    print_result(result)
+    try:
+      # Convert call to an int
+      call = outcomes.index(call.lower())
+      
+      if call == toss:
+          result = toss_string + '\n\nYou guessed correctly!\n\nYou won ' + str(pot) + ' ' + denomination + '!'
+          wallet += pot
+      else:
+          result = toss_string + '\n\nYou guessed incorrectly.\n\nYou lost ' + str(pot) + ' ' + denomination + '.'
+          wallet -= pot
+      
+      # Output result
+      print_result(result)
+      
+    except TypeError:
+      # Occurs when user provides a POT value that is not a number
+      print('Oops, that wasn''t a valid entry for "pot"')
+    
+    except ValueError:
+      # Occurs when user provides a CALL value that is not 'heads' or 'tails'
+      print('Oops, that wasn''t a valid entry for "call"')
+    
+    except:
+      print("Unexpected error:", sys.exc_info()[0])
 ```
 
 ### Cho Han
@@ -114,7 +132,7 @@ If the player correctly guesses whether the number would be odd or even,
 they win, adding the value of the pot to their wallet. Otherwise they
 lose, subtracting the value of the pot from their wallet.
 
-1.  The two possible call values are asigned to a list called
+1.  The two possible call values are assigned to a list called
     **outcomes** so that we can (using *list*.index) view the call as
     either a string or an integer
 2.  Assign a random int between 0 and 1 for the result of the **roll**
@@ -122,36 +140,57 @@ lose, subtracting the value of the pot from their wallet.
 3.  Find the string version of the **roll** result by using the **roll**
     result as the index for returning a value from the **outcomes** list
 4.  Convert the original **call** value to an integer by looking up the
-    string value in the **outcomes** list and returning it’s posision
+    string value in the **outcomes** list and returning it’s position
     (with *list*.index)
-5.  Process the result of the game…
-    1.  Populate the **result** value based on comparing **roll** to
-        **call**
-    2.  Adjust the **wallet** *global* variable by the pot accordingly
-6.  Pass the **result** of the game to the **print\_result** function to
-    display it
+5.  Enter a *try except* to avoid invalid input errors
+    1.  Convert the original **call** value to an integer by looking up
+        the string value in the **outcomes** list and returning it’s
+        position (with *list*.index), lower-casing the input to allow
+        any casing version (odd, Odd, ODD)
+    2.  Process the result of the game…
+        1.  Populate the **result** value based on comparing **roll** to
+            **call**
+        2.  Adjust the **wallet** *global* variable by the pot
+            accordingly
+    3.  Pass the **result** of the game to the **print\_result**
+        function to display it
+6.  Print relevant error on *except*
 
 ``` python
 # Cho-Han
 def cho_han(pot, call):
     # Define variables
     global wallet
-    outcomes = ["even", "odd"]
+    outcomes = ['even', 'odd']
     roll = random.randint(1,6) + random.randint(1,6)
     roll_type = roll % 2
     roll_string = outcomes[roll_type]
-    call = outcomes.index(call)
 
     # Find result
-    if call == roll_type:
-        result = str(roll) + "... " + roll_string + "\n\nYou guessed correctly!\n\nYou won " + str(pot) + " " + denomination + "!"
-        wallet += pot
-    else:
-        result = str(roll) + "... " + roll_string + "\n\nYou guessed incorrectly.\n\nYou lost " + str(pot) + " " + denomination + "."
-        wallet -= pot
+    try:
+      # Convert call to an int
+      call = outcomes.index(call.lower())
+      
+      if call == roll_type:
+          result = str(roll) + '... ' + roll_string + '\n\nYou guessed correctly!\n\nYou won ' + str(pot) + ' ' + denomination + '!'
+          wallet += pot
+      else:
+          result = str(roll) + '... ' + roll_string + '\n\nYou guessed incorrectly.\n\nYou lost ' + str(pot) + ' ' + denomination + '.'
+          wallet -= pot
+      
+      # Output result
+      print_result(result)
+      
+    except TypeError:
+      # Occurs when user provides a POT value that is not a number
+      print('Oops, that wasn''t a valid entry for "pot"')
     
-    # Output result
-    print_result(result)
+    except ValueError:
+      # Occurs when user provides a CALL value that is not 'heads' or 'tails'
+      print('Oops, that wasn''t a valid entry for "call"')
+    
+    except:
+      print("Unexpected error:", sys.exc_info()[0])
 ```
 
 ### Card Draw
@@ -168,12 +207,15 @@ from their wallet.
     variables
 2.  Prepare the first part of the **result text**, as this will be the
     same regardless
-3.  Process the result of the game…
-    1.  Populate the **result** value based on comparing
-        **player\_card** to **game\_card**
-    2.  Adjust the **wallet** *global* variable by the pot accordingly
-4.  Pass the **result** of the game to the **print\_result** function to
-    display it
+3.  Enter a *try except* to avoid invalid input errors
+    1.  Process the result of the game…
+        1.  Populate the **result** value based on comparing
+            **player\_card** to **game\_card**
+        2.  Adjust the **wallet** *global* variable by the pot
+            accordingly
+    2.  Pass the **result** of the game to the **print\_result**
+        function to display it
+4.  Print relevant error on *except*
 
 ``` python
 # Card Draw
@@ -182,33 +224,41 @@ def card_draw(pot):
   global wallet
   player_card = random.randint(1,10)
   game_card = random.randint(1,10)
-  result = "You drew " + str(player_card) + " and I drew " + str(game_card) + ".\n\n"
+  result = 'You drew ' + str(player_card) + ' and I drew ' + str(game_card) + '.\n\n'
   
   # Find result
-  if player_card > game_card:
-    result += "You win!\n\nYou won " + str(pot) + " " + denomination + "."
-    wallet += pot
-  elif player_card < game_card:
-    result += "I won!\n\nYou lost " + str(pot) + " " + denomination + "."
-    wallet -= pot
-  else:
-    result += "We drew.\n\nYou didn't win or lose."
+  try:
+    if player_card > game_card:
+      result += 'You win!\n\nYou won ' + str(pot) + ' ' + denomination + '.'
+      wallet += pot
+    elif player_card < game_card:
+      result += 'I won!\n\nYou lost ' + str(pot) + ' ' + denomination + '.'
+      wallet -= pot
+    else:
+      result += 'We drew.\n\nYou didn''t win or lose.'
     
-  # Output result
-  print_result(result)
+    # Output result
+    print_result(result)
+    
+  except TypeError:
+    # Occurs when user provides a POT value that is not a number
+    print('Oops, that wasn''t a valid entry for "pot"')
+  
+  except:
+    print("Unexpected error:", sys.exc_info()[0])
 ```
 
 ### Simple Roulette
 
 The Simple Roulette game takes the pot (the amount the player bets,) the
-call type (which can either be “parity” or “number”,) and the call
-(which is eother “odd”/“even”, “00”, or a number as a string.) The game
+call type (which can either be ‘parity’ or ‘number’,) and the call
+(which is either ‘odd’/‘even’, ‘00’, or a number as a string.) The game
 calculates the result of a **spin**, returning the number as a string
 (because 00 and 0 are the same number when defined as ints.) The game
 then also checks the parity of the **spin**.
 
-If the player chose “parity”, and their **call** was the same as the
-parity of the **spin**, or if they chose “number” and the number of
+If the player chose ‘parity’, and their **call** was the same as the
+parity of the **spin**, or if they chose ‘number’ and the number of
 their call was the same as the **spin**, they win, adding the value of
 the **pot** to their **wallet.** If the player’s guess was incorrect the
 player loses, subtracting the value of the **pot** from their
@@ -234,21 +284,21 @@ player loses, subtracting the value of the **pot** from their
 def simple_roulette(pot, call_type, call):
   # Define variables
   global wallet
-  if call_type == "number": pot *= 35
-  outcomes = ["0", "00", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28"]
+  if call_type == 'number': pot *= 35
+  outcomes = ['0', '00', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28']
   spin = outcomes[random.randint(0, len(outcomes) - 1)]
   if int(spin) == 0 or int(spin) % 2 != 0:
-    spin_parity = "odd"
+    spin_parity = 'odd'
   else:
-    spin_parity = "even"
+    spin_parity = 'even'
   
   # Find result
-  if (call_type == "parity" and call == spin_parity) or \
-     (call_type == "number" and call == spin):
-    result = spin + ", " + spin_parity + ".\n\nYou guessed correctly!\n\nYou won " + str(pot) + " " + denomination + "."
+  if (call_type == 'parity' and call == spin_parity) or \
+     (call_type == 'number' and call == spin):
+    result = spin + ', ' + spin_parity + '.\n\nYou guessed correctly!\n\nYou won ' + str(pot) + ' ' + denomination + '.'
     wallet += pot
   else:
-    result = spin + ", " + spin_parity + ".\n\nYou guessed incorrectly.\n\nYou lost " + str(pot) + " " + denomination + "."
+    result = spin + ', ' + spin_parity + '.\n\nYou guessed incorrectly.\n\nYou lost ' + str(pot) + ' ' + denomination + '.'
     wallet -= pot
 
   # Output result
@@ -265,16 +315,16 @@ Call the game!
 ``` python
 #--CALL GAMES--#
 # Coin Toss
-coin_toss(20, "heads")
+coin_toss(2, 'Heads')
 ```
 
-    ## heads
+    ## tails
     ## 
-    ## You guessed correctly!
+    ## You guessed incorrectly.
     ## 
-    ## You won 20 chips!
+    ## You lost 2 chips.
     ## 
-    ## You have 120 chips left.
+    ## You have 98 chips left.
 
 ### The Cho-Han game
 
@@ -282,16 +332,16 @@ Call the game!
 
 ``` python
 # Cho-Han
-cho_han(20, "odd")
+cho_han(20, 'odd')
 ```
 
-    ## 5... odd
+    ## 8... even
     ## 
-    ## You guessed correctly!
+    ## You guessed incorrectly.
     ## 
-    ## You won 20 chips!
+    ## You lost 20 chips.
     ## 
-    ## You have 140 chips left.
+    ## You have 78 chips left.
 
 ### The Card Draw game
 
@@ -302,13 +352,13 @@ Call the game!
 card_draw(20)
 ```
 
-    ## You drew 7 and I drew 6.
+    ## You drew 5 and I drew 1.
     ## 
     ## You win!
     ## 
     ## You won 20 chips.
     ## 
-    ## You have 160 chips left.
+    ## You have 98 chips left.
 
 ### Th Simple Roulette Game
 
@@ -318,28 +368,28 @@ Call the game!
 
 ``` python
 # Simple Roulette
-simple_roulette(20, "parity", "odd")
+simple_roulette(20, 'parity', 'odd')
 ```
 
-    ## 00, odd.
+    ## 24, even.
     ## 
-    ## You guessed correctly!
+    ## You guessed incorrectly.
     ## 
-    ## You won 20 chips.
+    ## You lost 20 chips.
     ## 
-    ## You have 180 chips left.
+    ## You have 78 chips left.
 
 #### With a number call type
 
 ``` python
 # Simple Roulette
-simple_roulette(20, "number", "00")
+simple_roulette(20, 'number', '00')
 ```
 
-    ## 2, even.
+    ## 5, odd.
     ## 
     ## You guessed incorrectly.
     ## 
     ## You lost 700 chips.
     ## 
-    ## You have -520 chips left.
+    ## You have -622 chips left.
