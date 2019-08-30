@@ -264,45 +264,70 @@ the **pot** to their **wallet.** If the player’s guess was incorrect the
 player loses, subtracting the value of the **pot** from their
 **wallet.**
 
-1.  In roulette a bet against a number returns the pot multiplied by 35,
-    against parity it returns the bet multiplied by 1. Update the
-    **pot** accordingly
-2.  Define a *list* containing all possible **outcomes** of a spin as
+1.  Define a *list* containing all possible **outcomes** of a spin as
     strings (because 00 and 0 are the same number when defined as ints)
-3.  Find the result of the spin by returning a random value from the
+2.  Find the result of the spin by returning a random value from the
     **outcomes** *list*
-4.  Find the *spin\_parity* of the spin
-5.  Process the result of the game…
-    1.  Populate the **result** value based on comparing **call** to
-        **spin** or **spin\_parity**
-    2.  Adjust the **wallet** *global* variable by the pot accordingly
-6.  Pass the **result** of the game to the **print\_result** function to
-    display it
+3.  Find the *spin\_parity* of the spin
+4.  Enter a *try except* to avoid invalid input errors
+    1.  In roulette a bet against a number returns the pot multiplied by
+        35, against parity it returns the bet multiplied by 1. Update
+        the **pot** accordingly
+    2.  Check for specific input errors, printing an error message if
+        needed
+    3.  Process the result of the game…
+        1.  Populate the **result** value based on comparing **call** to
+            **spin** or **spin\_parity**
+        2.  Adjust the **wallet** *global* variable by the pot
+            accordingly
+        3.  Pass the **result** of the game to the **print\_result**
+            function to display it
+5.  Print relevant error on *except*
 
 ``` python
 # Simple Roulette
 def simple_roulette(pot, call_type, call):
   # Define variables
   global wallet
-  if call_type == 'number': pot *= 35
   outcomes = ['0', '00', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28']
+  call_types = ['number', 'parity']
   spin = outcomes[random.randint(0, len(outcomes) - 1)]
   if int(spin) == 0 or int(spin) % 2 != 0:
     spin_parity = 'odd'
   else:
     spin_parity = 'even'
   
-  # Find result
-  if (call_type == 'parity' and call == spin_parity) or \
-     (call_type == 'number' and call == spin):
-    result = spin + ', ' + spin_parity + '.\n\nYou guessed correctly!\n\nYou won ' + str(pot) + ' ' + denomination + '.'
-    wallet += pot
-  else:
-    result = spin + ', ' + spin_parity + '.\n\nYou guessed incorrectly.\n\nYou lost ' + str(pot) + ' ' + denomination + '.'
-    wallet -= pot
-
-  # Output result
-  print_result(result)
+  try:
+    # Set pot value
+    if call_type == 'number': pot *= 35
+    
+    # Find and handle errors
+    if call_type.lower() not in call_types:
+      print('Oops, call type must be either parity or number.')
+    elif call_type.lower() == 'parity' and call.lower() not in ['odd', 'even']:
+      print('Oops, parity must be either odd or even.')
+    elif call_type.lower() == 'number' and call not in outcomes:
+      print('Oops, number must be one of these (as a string): 0, 00, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 19, 20, 21, 22, 23, 24, 25, 26, 27, or 28')
+    
+    # And without errors, find results 
+    elif (call_type == 'parity' and call == spin_parity) or (call_type == 'number' and call == spin):
+      result = spin + ', ' + spin_parity + '.\n\nYou guessed correctly!\n\nYou won ' + str(pot) + ' ' + denomination + '.'
+      wallet += pot
+      print_result(result)
+    else:
+      result = spin + ', ' + spin_parity + '.\n\nYou guessed incorrectly.\n\nYou lost ' + str(pot) + ' ' + denomination + '.'
+      wallet -= pot
+      print_result(result)
+  
+  except TypeError:
+    print('Oops, pot needs to be a number')
+  
+  except AttributeError: 
+    print('Oops, call type needs to be a string')
+  
+  except:
+    print("Unexpected error:", sys.exc_info()[0])
+    
 ```
 
 Play the games!
@@ -335,13 +360,13 @@ Call the game!
 cho_han(20, 'odd')
 ```
 
-    ## 8... even
+    ## 7... odd
     ## 
-    ## You guessed incorrectly.
+    ## You guessed correctly!
     ## 
-    ## You lost 20 chips.
+    ## You won 20 chips!
     ## 
-    ## You have 78 chips left.
+    ## You have 118 chips left.
 
 ### The Card Draw game
 
@@ -352,13 +377,13 @@ Call the game!
 card_draw(20)
 ```
 
-    ## You drew 5 and I drew 1.
+    ## You drew 3 and I drew 1.
     ## 
     ## You win!
     ## 
     ## You won 20 chips.
     ## 
-    ## You have 98 chips left.
+    ## You have 138 chips left.
 
 ### Th Simple Roulette Game
 
@@ -371,25 +396,25 @@ Call the game!
 simple_roulette(20, 'parity', 'odd')
 ```
 
-    ## 24, even.
+    ## 27, odd.
     ## 
-    ## You guessed incorrectly.
+    ## You guessed correctly!
     ## 
-    ## You lost 20 chips.
+    ## You won 20 chips.
     ## 
-    ## You have 78 chips left.
+    ## You have 158 chips left.
 
 #### With a number call type
 
 ``` python
 # Simple Roulette
-simple_roulette(20, 'number', '00')
+simple_roulette(20, 'number', '1')
 ```
 
-    ## 5, odd.
+    ## 21, odd.
     ## 
     ## You guessed incorrectly.
     ## 
     ## You lost 700 chips.
     ## 
-    ## You have -622 chips left.
+    ## You have -542 chips left.
